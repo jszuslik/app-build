@@ -1,0 +1,18 @@
+# Ignore these files
+/.gradle
+/out
+/gradle
+/.idea
+/.DS_Store
+/*/*/*/*/*/.DS_Store
+/*/*/*/*/*/*/.DS_Store
+/gradlew
+/gradlew.bat
+/classes
+/logs
+/activemq-data
+/KahaDB
+
+/build
+/app-api/service/build
+/app-api/core/build
