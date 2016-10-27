@@ -98,6 +98,7 @@ project(":app-api:service") {
         compile("javax.activation:activation:1.1.1")  // Logback email notification support
 
         compile project(":app-api:core")
+        compile project(":app-core")
 
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }

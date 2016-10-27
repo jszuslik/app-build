@@ -5,6 +5,7 @@
         xmlns:int-http="http://www.springframework.org/schema/integration/http"
         xmlns:beans="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
         xmlns:context="http://www.springframework.org/schema/context"
         xmlns:int="http://www.springframework.org/schema/integration"
         xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -16,7 +17,10 @@
 						   http://www.springframework.org/schema/integration/http
 						   http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
 						   http://www.springframework.org/schema/integration/xml
-						   http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd">
+						   http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd
+						   http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
 
     <channel id="loginChannel" />
     <channel id="loggedInChannel" />
@@ -27,6 +31,5 @@
             supported-methods="POST"
             reply-timeout="30000"
             path="/login" />
-
 
     </beans:beans>
