@@ -6,9 +6,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(
+		name = "AUTHORITIES"
+)
 public class Authority extends ModelBase {
 
-	private AuthorityName authorityName;
+	private AuthorityName username;
 
 	private List<AppUser> appUsers;
 
@@ -16,11 +20,11 @@ public class Authority extends ModelBase {
 
 	@Column(name = "NAME", length = 50)
 	@Enumerated(EnumType.STRING)
-	public AuthorityName getAuthorityName() {
-		return authorityName;
+	public AuthorityName getAuthName() {
+		return username;
 	}
-	public void setAuthorityName(AuthorityName authorityName) {
-		this.authorityName = authorityName;
+	public void setAuthName(AuthorityName username) {
+		this.username = username;
 	}
 
 	@ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)

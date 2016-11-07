@@ -23,8 +23,8 @@ public class AuthorityDTO {
 			setId(authority.getId());
 		}
 
-		if(authority.getAuthorityName() != null) {
-			setAuthorityName(authority.getAuthorityName());
+		if(authority.getAuthName() != null) {
+			setAuthorityName(authority.getAuthName());
 		}
 
 		if(authority.getAppUsers() != null) {
@@ -43,7 +43,7 @@ public class AuthorityDTO {
 		}
 
 		if(getAuthorityName() != null){
-			authority.setAuthorityName(getAuthorityName());
+			authority.setAuthName(getAuthorityName());
 		}
 
 		if(getAppUsers() != null) {

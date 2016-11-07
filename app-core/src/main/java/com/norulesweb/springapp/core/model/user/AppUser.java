@@ -36,24 +36,6 @@ public class AppUser extends ModelBase {
 
 	public AppUser() { }
 
-	public AppUser(
-			String userId,
-			String password,
-			String firstName,
-			String lastName,
-			String email,
-			Boolean enabled,
-			List<Authority> authorities
-	) {
-		this.setUserId(userId);
-		this.setPassword(password);
-		this.setFirstName(firstName);
-		this.setLastName(lastName);
-		this.setEmail(email);
-		this.setEnabled(enabled);
-		this.setAuthorities(authorities);
-	}
-
 	@Column(name = "USER_ID", length = ModelConstants.LEN_MEDIUM, unique = true)
 	public String getUserId() {
 		return userId;

@@ -1,8 +1,7 @@
 package com.norulesweb.springapp.utils.data;
 
-import com.norulesweb.springapp.core.model.user.AppUser;
-import com.norulesweb.springapp.core.repository.user.AppUserRepository;
-import com.norulesweb.springapp.core.utilities.user.AppUserUtilities;
+import com.norulesweb.springapp.core.services.user.AppUserDTO;
+import com.norulesweb.springapp.core.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,23 @@ public class Initializer {
 	@Value("${initialize.user.password}")
 	protected String userPassword;
 
+	@Value("${initialize.user.firstname}")
+	protected String userFirstName;
+
+	@Value("${initialize.user.lastname}")
+	protected String userLastName;
+
 	@Value("${initialize.user.email}")
 	protected String userEmail;
 
-	@Value("${initialize.user.roles}")
-	protected String roles;
+	@Value("${initialize.user.role.admin}")
+	protected String adminRole;
+
+	@Value("${initialize.user.role.user}")
+	protected String userRole;
+
+	@Value("${initialize.user.enabled}")
+	protected Boolean enabled;
 
 	@Value("${initialize.platform.name}")
 	protected String platformName;
@@ -41,21 +52,21 @@ public class Initializer {
 	protected String platformDescription;
 
 	@Autowired
-	protected AppUserRepository appUserRepository;
-
-	@Autowired
-	protected AppUserUtilities appUtilities;
-
+	protected UserService userService;
 
 	public void initializePlatform() {
 
 		log.info("Start Initializing DB");
 
-		String encodedPassword = appUtilities.encodePassword(userPassword);
+		AppUserDTO appUserDTO = new AppUserDTO();
+		appUserDTO.setUserId(userName);
+		appUserDTO.setPassword(userPassword);
+		appUserDTO.setFirstName(userFirstName);
+		appUserDTO.setLastName(userLastName);
+		appUserDTO.setEmail(userEmail);
+		appUserDTO.setEnabled(enabled);
 
-		AppUser appUser = new AppUser(userName, encodedPassword, roles);
-		appUserRepository.save(appUser);
-
+		userService.createAppUser(appUserDTO);
 
 		log.info("End Initializing DB");
 

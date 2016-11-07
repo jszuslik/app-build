@@ -35,7 +35,7 @@ public class AppUserWebService {
 	@RequestMapping(value = URL_USER_REGISTRATION)
 	@ResponseBody
 	public AppUserDTO registerUser(@RequestBody @Valid AppUserDTO appUserDTO) {
-		AppUserDTO appUser = userService.createAppUser(appUserDTO.getUserId(),appUserDTO.getPassword(), ROLE_EMPLOYEE);
+		AppUserDTO appUser = userService.createAppUser(appUserDTO);
 
 		return appUser;
 	}

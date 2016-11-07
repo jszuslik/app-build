@@ -7,6 +7,7 @@ import com.mysema.query.types.path.*;
 import com.mysema.query.types.PathMetadata;
 import javax.annotation.Generated;
 import com.mysema.query.types.Path;
+import com.mysema.query.types.path.PathInits;
 
 
 /**
@@ -21,12 +22,22 @@ public class QAppUser extends EntityPathBase<AppUser> {
 
     public final com.norulesweb.springapp.core.model.common.QModelBase _super = new com.norulesweb.springapp.core.model.common.QModelBase(this);
 
+    public final ListPath<Authority, QAuthority> authorities = this.<Authority, QAuthority>createList("authorities", Authority.class, QAuthority.class, PathInits.DIRECT2);
+
+    public final StringPath email = createString("email");
+
+    public final BooleanPath enabled = createBoolean("enabled");
+
+    public final StringPath firstName = createString("firstName");
+
     //inherited
     public final NumberPath<Long> id = _super.id;
 
-    public final StringPath password = createString("password");
+    public final StringPath lastName = createString("lastName");
 
-    public final StringPath roles = createString("roles");
+    public final DateTimePath<java.util.Date> lastPasswordResetDate = createDateTime("lastPasswordResetDate", java.util.Date.class);
+
+    public final StringPath password = createString("password");
 
     public final StringPath userId = createString("userId");
 
