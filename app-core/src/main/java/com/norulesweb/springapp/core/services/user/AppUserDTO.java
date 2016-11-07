@@ -49,4 +49,5 @@ public class AppUserDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 }

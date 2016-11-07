@@ -1,6 +1,7 @@
 package com.norulesweb.springapp.api;
 
 
+import com.norulesweb.springapp.core.common.AppRepositoryFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -10,9 +11,12 @@ import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
@@ -21,19 +25,19 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     @PropertySource(value = "classpath:spring-data-application.properties", ignoreResourceNotFound = true),
     @PropertySource(value = "classpath:spring-data-application.runtime.properties", ignoreResourceNotFound = true)
 })
-//@ComponentScan(
-//		basePackages = { "com.norulesweb.studenttracker.core", "com.norulesweb.studenttracker.api.web", "com.norulesweb.studenttracker.api.security"}
-//)
+@ComponentScan(
+		basePackages = { "com.norulesweb.springapp.core", "com.norulesweb.springapp.api.web", "com.norulesweb.springapp.api.security"}
+)
 @EnableAutoConfiguration(exclude={
 		JmsAutoConfiguration.class
 })
 @EnableTransactionManagement
 // @ImportResource("classpath:spring-application-integration.xml")
-//@EnableJpaRepositories(
-//		repositoryFactoryBeanClass = AppRepositoryFactoryBean.class,
-//		basePackages = { "com.norulesweb.studenttracker.core.repository" }
-//)
-//@EntityScan(basePackages = { "com.norulesweb.studenttracker.core" })
+@EnableJpaRepositories(
+		repositoryFactoryBeanClass = AppRepositoryFactoryBean.class,
+		basePackages = { "com.norulesweb.springapp.core.repository" }
+)
+@EntityScan(basePackages = { "com.norulesweb.springapp.core" })
 public class Application extends SpringBootServletInitializer {
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 

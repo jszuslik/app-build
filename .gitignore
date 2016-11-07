@@ -17,3 +17,6 @@
 /app-api/service/build
 /app-api/core/build
 /app-core/build
+/app-utils/app-data-load/build
+/app-utils/build
+/app-utils/core/build

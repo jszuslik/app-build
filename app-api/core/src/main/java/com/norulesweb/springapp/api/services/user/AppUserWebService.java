@@ -4,8 +4,6 @@ import com.norulesweb.springapp.core.services.user.AppUserDTO;
 import com.norulesweb.springapp.core.services.user.UserService;
 import com.norulesweb.springapp.core.services.utilities.UserLookup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,12 +30,14 @@ public class AppUserWebService {
 
 	public static final String URL_USER_REGISTRATION = URL_USER_BASE + "/registration";
 
+	public static final String ROLE_EMPLOYEE = "ROLE_EMPLOYEE";
+
 	@RequestMapping(value = URL_USER_REGISTRATION)
 	@ResponseBody
-	public ResponseEntity<?> registerUser(HttpHeaders httpHeaders, @RequestBody @Valid AppUserDTO appUserDTO) {
-		AppUserDTO appUser = userService.createAppUser(appUserDTO.getUserId(),appUserDTO.getPassword());
+	public AppUserDTO registerUser(@RequestBody @Valid AppUserDTO appUserDTO) {
+		AppUserDTO appUser = userService.createAppUser(appUserDTO.getUserId(),appUserDTO.getPassword(), ROLE_EMPLOYEE);
 
-		return ResponseEntity.ok(appUser);
+		return appUser;
 	}
 
 }

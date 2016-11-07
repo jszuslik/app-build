@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_FILE" value="${SMARTFLOW_HOME:-${CATALINA_BASE:-.}}/logs/app-api.log" />
+    <property name="LOG_FILE" value="${STUDENTTRACKER_HOME:-${CATALINA_BASE:-.}}/logs/data-load.log" />
     <include resource="org/springframework/boot/logging/logback/base.xml" />
     <include resource="logback.runtime.xml" optional="true" />
 </configuration>
