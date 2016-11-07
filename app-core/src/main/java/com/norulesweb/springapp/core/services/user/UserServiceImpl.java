@@ -17,10 +17,10 @@ public class UserServiceImpl implements UserService {
 	protected AppUserRepository appUserRepository;
 
 	@Override
-	public AppUserDTO createAppUser(String userId, String plaintextpassword, String roles) {
+	public AppUserDTO createAppUser(AppUserDTO newUserDTO) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-		AppUser appUser = new AppUser(userId, passwordEncoder.encode(plaintextpassword), roles);
+		newUserDTO.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
+		AppUser appUser = newUserDTO.buildModel();
 		AppUser savedUser = appUserRepository.save(appUser);
 
 		appUserRepository.flushAndRefresh(savedUser);

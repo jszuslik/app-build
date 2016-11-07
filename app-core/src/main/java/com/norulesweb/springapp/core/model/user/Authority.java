@@ -8,32 +8,32 @@ import java.util.List;
 
 public class Authority extends ModelBase {
 
-	private AuthorityName name;
+	private AuthorityName authorityName;
 
-	private List<AppUser> users;
+	private List<AppUser> appUsers;
 
 	public Authority() { }
 
 	@Column(name = "NAME", length = 50)
 	@Enumerated(EnumType.STRING)
-	public AuthorityName getName() {
-		return name;
+	public AuthorityName getAuthorityName() {
+		return authorityName;
 	}
-	public void setName(AuthorityName name) {
-		this.name = name;
+	public void setAuthorityName(AuthorityName authorityName) {
+		this.authorityName = authorityName;
 	}
 
 	@ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
-	public List<AppUser> getUsers() {
-		return users;
+	public List<AppUser> getAppUsers() {
+		return appUsers;
 	}
-	public void setUsers(List<AppUser> users) {
-		this.users = users;
+	public void setAppUsers(List<AppUser> appUsers) {
+		this.appUsers = appUsers;
 	}
-	public void addUser(AppUser user) {
-		if (this.users == null) {
-			this.users = new ArrayList<>();
+	public void addAppUser(AppUser appUser) {
+		if (this.appUsers == null) {
+			this.appUsers = new ArrayList<>();
 		}
-		this.users.add(user);
+		this.appUsers.add(appUser);
 	}
 }
