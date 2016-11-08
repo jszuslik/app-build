@@ -21,6 +21,8 @@ public class AppUserDTO {
 
 	protected String email;
 
+	protected Boolean isAdmin;
+
 	protected Boolean enabled;
 
 	protected Date lastPasswordResetDate;
@@ -55,6 +57,10 @@ public class AppUserDTO {
 			setEmail(appUser.getEmail());
 		}
 
+		if(appUser.getAdmin() != null){
+			setAdmin(appUser.getAdmin());
+		}
+
 		if(appUser.getEnabled() != null){
 			setEnabled(appUser.getEnabled());
 		}
@@ -66,7 +72,7 @@ public class AppUserDTO {
 		if(appUser.getAuthorities() != null){
 			authorities = new LinkedList<>();
 			for(Authority authority : appUser.getAuthorities()){
-				authorities.add(AuthorityDTO.buildDTO(authority));
+				addAuthority(new AuthorityDTO(authority));
 			}
 		}
 	}
@@ -96,6 +102,10 @@ public class AppUserDTO {
 
 		if(getEmail() != null){
 			appUser.setEmail(getEmail());
+		}
+
+		if(getAdmin() != null){
+			appUser.setAdmin(getAdmin());
 		}
 
 		if(getEnabled() != null){
@@ -174,6 +184,14 @@ public class AppUserDTO {
 		this.email = email;
 	}
 
+	public Boolean getAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(Boolean admin) {
+		isAdmin = admin;
+	}
+
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -196,5 +214,12 @@ public class AppUserDTO {
 
 	public void setAuthorities(List<AuthorityDTO> authorities) {
 		this.authorities = authorities;
+	}
+
+	public void addAuthority(AuthorityDTO authorityDTO){
+		if(authorityDTO == null){
+			this.authorities = new LinkedList<>();
+		}
+		this.authorities.add(authorityDTO);
 	}
 }

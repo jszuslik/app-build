@@ -12,7 +12,7 @@ import java.util.List;
 )
 public class Authority extends ModelBase {
 
-	private AuthorityName username;
+	private AuthorityName authorityName;
 
 	private List<AppUser> appUsers;
 
@@ -20,11 +20,11 @@ public class Authority extends ModelBase {
 
 	@Column(name = "NAME", length = 50)
 	@Enumerated(EnumType.STRING)
-	public AuthorityName getAuthName() {
-		return username;
+	public AuthorityName getAuthorityName() {
+		return authorityName;
 	}
-	public void setAuthName(AuthorityName username) {
-		this.username = username;
+	public void setAuthorityName(AuthorityName authorityName) {
+		this.authorityName = authorityName;
 	}
 
 	@ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)

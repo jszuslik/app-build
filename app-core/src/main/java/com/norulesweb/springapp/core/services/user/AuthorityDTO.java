@@ -11,7 +11,7 @@ public class AuthorityDTO {
 
 	protected Long id;
 
-	protected AuthorityName authorityName;
+	protected String authorityName;
 
 	protected List<AppUserDTO> appUsers;
 
@@ -23,14 +23,13 @@ public class AuthorityDTO {
 			setId(authority.getId());
 		}
 
-		if(authority.getAuthName() != null) {
-			setAuthorityName(authority.getAuthName());
+		if(authority.getAuthorityName() != null) {
+			setAuthorityName(authority.getAuthorityName().name());
 		}
 
 		if(authority.getAppUsers() != null) {
-			appUsers = new LinkedList<>();
-			for(AppUser appUser : authority.getAppUsers()) {
-				appUsers.add(AppUserDTO.buildDTO(appUser));
+			for(AppUser appUser : authority.getAppUsers()){
+				addAppUser(new AppUserDTO(appUser));
 			}
 		}
 	}
@@ -43,7 +42,15 @@ public class AuthorityDTO {
 		}
 
 		if(getAuthorityName() != null){
-			authority.setAuthName(getAuthorityName());
+			switch (getAuthorityName()){
+				case "ROLE_ADMIN":
+					authority.setAuthorityName(AuthorityName.ROLE_ADMIN);
+					break;
+				case "ROLE_USER":
+					authority.setAuthorityName(AuthorityName.ROLE_USER);
+					break;
+			}
+
 		}
 
 		if(getAppUsers() != null) {
@@ -74,11 +81,11 @@ public class AuthorityDTO {
 		this.id = id;
 	}
 
-	public AuthorityName getAuthorityName() {
+	public String getAuthorityName() {
 		return authorityName;
 	}
 
-	public void setAuthorityName(AuthorityName authorityName) {
+	public void setAuthorityName(String authorityName) {
 		this.authorityName = authorityName;
 	}
 
@@ -88,5 +95,12 @@ public class AuthorityDTO {
 
 	public void setAppUsers(List<AppUserDTO> appUsers) {
 		this.appUsers= appUsers;
+	}
+
+	public void addAppUser(AppUserDTO appUserDTO){
+		if(this.appUsers == null){
+			appUsers = new LinkedList<>();
+		}
+		appUsers.add(appUserDTO);
 	}
 }

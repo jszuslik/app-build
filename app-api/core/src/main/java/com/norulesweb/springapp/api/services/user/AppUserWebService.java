@@ -36,6 +36,7 @@ public class AppUserWebService {
 	@ResponseBody
 	public AppUserDTO registerUser(@RequestBody @Valid AppUserDTO appUserDTO) {
 		AppUserDTO appUser = userService.createAppUser(appUserDTO);
+		
 
 		return appUser;
 	}

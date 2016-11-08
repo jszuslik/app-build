@@ -28,6 +28,8 @@ public class AppUser extends ModelBase {
 
 	private String email;
 
+	private Boolean isAdmin;
+
 	private Boolean enabled;
 
 	private Date lastPasswordResetDate;
@@ -74,6 +76,14 @@ public class AppUser extends ModelBase {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Column(name = "IS_ADMIN")
+	public Boolean getAdmin() {
+		return isAdmin;
+	}
+	public void setAdmin(Boolean admin) {
+		isAdmin = admin;
 	}
 
 	@Column(name = "ENABLED")
