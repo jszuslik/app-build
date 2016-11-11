@@ -1,10 +1,11 @@
 package com.norulesweb.springapp.api.config;
 
+import com.norulesweb.springapp.core.security.AppAuthenticationEntryPoint;
+import com.norulesweb.springapp.core.security.AppAuthenticationTokenFilter;
 import com.norulesweb.springapp.core.security.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,14 +15,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@SuppressWarnings("SpringJavaAutowiringInspection")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	protected AppUserDetailsService appUserDetailsService;
+	private AppAuthenticationEntryPoint unauthorizedHandler;
+
+	@Autowired
+	private AppUserDetailsService userDetailsService;
 
 	/**
 	 * The authentication provider.
@@ -29,11 +36,10 @@ public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public DaoAuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		provider.setUserDetailsService(appUserDetailsService);
+		provider.setUserDetailsService(userDetailsService);
 		provider.setPasswordEncoder(new BCryptPasswordEncoder());
 		return provider;
 	}
-
 	/**
 	 * The authentication manager
 	 */
@@ -43,26 +49,48 @@ public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	/**
-	 * HTTP security configuration
-	 */
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-		http
-				.csrf().disable()
-				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/api/**").authenticated()
-				.antMatchers(HttpMethod.PUT, "/api/**").authenticated()
-				.antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
-				.anyRequest().permitAll()
-				.and()
-				.httpBasic().and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	@Bean
+	public AppAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+		return new AppAuthenticationTokenFilter();
+	}
+
+	@Override
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity
+				.exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler).and()
+
+				// don't create session
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+		httpSecurity.authorizeRequests()
+				.antMatchers("/app-api/user/login").permitAll()
+
+				// By default any request must be authenticated
+				.anyRequest()
+				.authenticated()
+
+				.and().logout().logoutUrl("/app-api/logout").permitAll()
+
+				// Allow HTTP Basic Auth
+				.and().httpBasic().disable();
+
+		httpSecurity.csrf().disable();
+
+		// Custom JWT based security filter
+		httpSecurity
+				.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+
+		// disable page caching
+		httpSecurity.headers().cacheControl();
 	}
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(daoAuthenticationProvider());
 	}
+
 }

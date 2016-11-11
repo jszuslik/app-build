@@ -1,39 +1,51 @@
 package com.norulesweb.springapp.core.security;
 
-import com.norulesweb.springapp.core.model.user.AppUser;
-import com.norulesweb.springapp.core.services.user.AppUserDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 public class AppUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = -4958723639132118472L;
 
-	protected String password;
+	private final Long id;
+	private final String username;
+	private final String firstname;
+	private final String lastname;
+	private final String password;
+	private final String email;
+	private final Collection<? extends GrantedAuthority> authorities;
+	private final boolean enabled;
+	private final Date lastPasswordResetDate;
 
-	protected String username;
-
-	protected boolean enabled;
-
-	protected AppUser appUser;
-
-	public AppUserDetails(AppUserDTO userDTO) {
-		username = userDTO.getUserId();
-		password = userDTO.getPassword();
-		enabled = true;
-		appUser = userDTO.buildModel();
+	public AppUserDetails(
+         Long id,
+         String username,
+         String firstname,
+         String lastname,
+         String email,
+         String password,
+         Collection<? extends GrantedAuthority> authorities,
+         boolean enabled,
+         Date lastPasswordResetDate
+	) {
+		this.id = id;
+		this.username = username;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.email = email;
+		this.password = password;
+		this.authorities = authorities;
+		this.enabled = enabled;
+		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
+	@JsonIgnore
+	public Long getId() {
+		return id;
 	}
 
 	@Override
@@ -41,19 +53,45 @@ public class AppUserDetails implements UserDetails {
 		return username;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	@JsonIgnore
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
 	}
 
 	@Override
@@ -61,13 +99,9 @@ public class AppUserDetails implements UserDetails {
 		return enabled;
 	}
 
-	public AppUser getAppUser() {
-		return appUser;
-	}
-
-	@Override
-	public String toString() {
-		return username + " - " + appUser.toString();
+	@JsonIgnore
+	public Date getLastPasswordResetDate() {
+		return lastPasswordResetDate;
 	}
 
 }

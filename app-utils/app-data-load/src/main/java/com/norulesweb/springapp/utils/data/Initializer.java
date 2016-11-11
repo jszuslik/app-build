@@ -84,12 +84,12 @@ public class Initializer {
 
 		 AuthorityDTO adminAuth = new AuthorityDTO();
 		 adminAuth.setAuthorityName(AuthorityName.ROLE_ADMIN.name());
-		 adminAuth.addAppUser(appUserDTO);
+		 adminAuth.addAppUser(appUserDTO.getId());
 		 Authority adAuth = authorityRepository.save(adminAuth.buildModel());
 
 		 AuthorityDTO userAuth = new AuthorityDTO();
 		 userAuth.setAuthorityName(AuthorityName.ROLE_USER.name());
-		 userAuth.addAppUser(appUserDTO);
+		 userAuth.addAppUser(appUserDTO.getId());
 		 Authority usAuth = authorityRepository.save(userAuth.buildModel());
 
 		 appUserDTO.addAuthority(new AuthorityDTO(adAuth));

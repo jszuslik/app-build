@@ -1,7 +1,7 @@
 package com.norulesweb.springapp.core.services.utilities;
 
-import com.norulesweb.springapp.core.model.user.AppUser;
+import com.norulesweb.springapp.core.security.AppUserDetails;
 
 public interface UserLookup {
-	AppUser getCurrentUser();
+	AppUserDetails getCurrentUser();
 }

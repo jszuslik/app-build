@@ -1,6 +1,8 @@
 package com.norulesweb.springapp.core.services.user;
 
 import com.norulesweb.springapp.core.model.user.AppUser;
+import com.norulesweb.springapp.core.model.user.Authority;
+import com.norulesweb.springapp.core.model.user.AuthorityName;
 import com.norulesweb.springapp.core.repository.user.AppUserRepository;
 import com.norulesweb.springapp.core.repository.user.AuthorityRepository;
 import org.slf4j.Logger;
@@ -49,6 +51,34 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return new AppUserDTO(users.get(0));
 		}
+	}
+
+	@Override
+	public AppUserDTO addAdminAuth(AppUserDTO userDTO){
+		Authority adAuth = authorityRepository.findByAuthorityName(AuthorityName.ROLE_ADMIN);
+		AppUser appUser = appUserRepository.findOne(userDTO.getId());
+		adAuth.addAppUser(appUser);
+		adAuth = authorityRepository.save(adAuth);
+		appUser.addAuthority(adAuth);
+		appUser = appUserRepository.save(appUser);
+
+		userDTO = new AppUserDTO(appUser);
+
+		return userDTO;
+	}
+
+	@Override
+	public AppUserDTO addUserAuth(AppUserDTO userDTO) {
+		Authority usAuth = authorityRepository.findByAuthorityName(AuthorityName.ROLE_USER);
+		AppUser appUser = appUserRepository.findOne(userDTO.getId());
+		usAuth.addAppUser(appUser);
+		usAuth = authorityRepository.save(usAuth);
+		appUser.addAuthority(usAuth);
+		appUser = appUserRepository.save(appUser);
+
+		userDTO = new AppUserDTO(appUser);
+
+		return userDTO;
 	}
 
 	@Override

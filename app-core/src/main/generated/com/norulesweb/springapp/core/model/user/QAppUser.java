@@ -22,6 +22,8 @@ public class QAppUser extends EntityPathBase<AppUser> {
 
     public final com.norulesweb.springapp.core.model.common.QModelBase _super = new com.norulesweb.springapp.core.model.common.QModelBase(this);
 
+    public final BooleanPath admin = createBoolean("admin");
+
     public final ListPath<Authority, QAuthority> authorities = this.<Authority, QAuthority>createList("authorities", Authority.class, QAuthority.class, PathInits.DIRECT2);
 
     public final StringPath email = createString("email");
