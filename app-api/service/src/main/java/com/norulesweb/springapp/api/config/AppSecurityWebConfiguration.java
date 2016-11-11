@@ -6,6 +6,7 @@ import com.norulesweb.springapp.core.security.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,7 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Configuration
@@ -60,32 +61,62 @@ public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity
-				.exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler).and()
+	protected void configure(HttpSecurity http) throws Exception {
+//		httpSecurity
+//				.exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler).and()
+//
+//				// don't create session
+//				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+//		httpSecurity.authorizeRequests()
+//				.antMatchers("/app-api/user/login").permitAll()
+//
+//				// By default any request must be authenticated
+//				.anyRequest()
+//				.authenticated()
+//
+//				.and().logout().logoutUrl("/app-api/logout").permitAll()
+//
+//				// Allow HTTP Basic Auth
+//				.and().httpBasic().disable();
+//
+//		httpSecurity.csrf().disable();
+//
+//		// Custom JWT based security filter
+//		httpSecurity
+//				.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//
+//		// disable page caching
+//		httpSecurity.headers().cacheControl();
+		http
+// defines the authentication for application entrypoints
+				.authorizeRequests()
+// POST to /rest/oauth/login is not authenticated
+				.antMatchers(HttpMethod.POST, "/app-api/user/login").permitAll()
+// GET /rest/oauth/token is not authenticated
+				.antMatchers(HttpMethod.GET, "/app-api/user/token").permitAll()
+// the other REST APIs are authenticated
+				.antMatchers("/app-api/**").authenticated()
+				.and()
+// never use server side sessions (stateless mode)
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.anonymous()
+				.and()
+				.securityContext()
+				.and()
+				.headers().disable()
+				.rememberMe().disable()
+				.requestCache().disable()
+				.x509().disable()
+				.csrf().disable()
+				.httpBasic().disable()
+				.formLogin().disable()
+				.logout().disable()
+// add custom authentication filter
+				.addFilterBefore(authenticationTokenFilterBean(), AnonymousAuthenticationFilter.class)
+// register custom authentication exception handler
+				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 
-				// don't create session
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
-		httpSecurity.authorizeRequests()
-				.antMatchers("/app-api/user/login").permitAll()
-
-				// By default any request must be authenticated
-				.anyRequest()
-				.authenticated()
-
-				.and().logout().logoutUrl("/app-api/logout").permitAll()
-
-				// Allow HTTP Basic Auth
-				.and().httpBasic().disable();
-
-		httpSecurity.csrf().disable();
-
-		// Custom JWT based security filter
-		httpSecurity
-				.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-
-		// disable page caching
-		httpSecurity.headers().cacheControl();
 	}
 
 	@Autowired

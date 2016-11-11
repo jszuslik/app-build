@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Service
@@ -49,6 +50,8 @@ public class AppUserWebService {
 	@Autowired
 	private AppUserDetailsService userDetailsService;
 
+	private static final String AUTH_HEADER_NAME = "Authorization";
+
 	public static final String URL_USER_BASE = "/user";
 
 	public static final String URL_USER_LOGIN = URL_USER_BASE + "/login";
@@ -60,7 +63,7 @@ public class AppUserWebService {
 	public static final String URL_USER_REGISTRATION = URL_USER_BASE + "/registration";
 
 	@RequestMapping(value = URL_USER_LOGIN)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AppAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody AppAuthenticationRequest authenticationRequest, Device device, HttpServletResponse response) throws AuthenticationException {
 
 		// Perform the security
 		final Authentication authentication = authenticationManager.authenticate(
@@ -74,6 +77,7 @@ public class AppUserWebService {
 		// Reload password post-security so we can generate token
 		final AppUserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = appTokenUtil.generateToken(userDetails, device);
+		response.addHeader(AUTH_HEADER_NAME, token);
 
 		// Return the token
 		return ResponseEntity.ok(new AppAuthenticationResponse(token));
