@@ -17,7 +17,7 @@
 /app-api/service/build
 /app-api/core/build
 /app-core/build
-/app-core/src/main/generated
+# /app-core/src/main/generated
 /app-utils/app-data-load/build
 /app-utils/build
 /app-utils/core/build
