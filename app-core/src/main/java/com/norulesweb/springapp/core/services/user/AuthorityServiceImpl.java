@@ -1,5 +1,6 @@
 package com.norulesweb.springapp.core.services.user;
 
+import com.norulesweb.springapp.core.model.user.AppUser;
 import com.norulesweb.springapp.core.model.user.Authority;
 import com.norulesweb.springapp.core.model.user.AuthorityName;
 import com.norulesweb.springapp.core.repository.user.AuthorityRepository;
@@ -54,6 +55,20 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Authority savedAuthority = authorityRepository.save(authorityDTO.buildModel());
 		authorityRepository.flushAndRefresh(savedAuthority);
 		return new AuthorityDTO(savedAuthority);
+	}
+
+	@Override
+	public List<Authority> findByAppUser(AppUser appUser) {
+		List<Authority> authorities = appUser.getAuthorities();
+		List<Authority> userAuths = new ArrayList<>();
+		for(Authority authority : authorities){
+			for(AppUser user : authority.getAppUsers()){
+				if(user.getId() == user.getId()){
+					userAuths.add(authority);
+				}
+			}
+		}
+		return userAuths;
 	}
 
 }

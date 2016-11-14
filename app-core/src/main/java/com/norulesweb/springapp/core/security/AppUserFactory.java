@@ -12,7 +12,7 @@ public final class AppUserFactory {
 
 	private AppUserFactory() { }
 
-	public static AppUserDetails create(AppUser user) {
+	public static AppUserDetails create(AppUser user, List<Authority> authorities) {
 		return new AppUserDetails(
              user.getId(),
              user.getUserId(),
@@ -20,7 +20,7 @@ public final class AppUserFactory {
              user.getLastName(),
              user.getEmail(),
              user.getPassword(),
-             mapToGrantedAuthorities(user.getAuthorities()),
+             mapToGrantedAuthorities(authorities),
              user.getEnabled(),
              user.getLastPasswordResetDate()
 		);

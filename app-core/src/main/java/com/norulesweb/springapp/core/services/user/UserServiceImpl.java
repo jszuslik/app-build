@@ -12,8 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -45,11 +43,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public AppUserDTO findUserByUserId(String userId){
-		List<AppUser> users = appUserRepository.findByUserId(userId);
+		AppUser user = appUserRepository.findByUserId(userId);
 		if (userId.isEmpty()) {
 			return null;
 		} else {
-			return new AppUserDTO(users.get(0));
+			return new AppUserDTO(user);
 		}
 	}
 
