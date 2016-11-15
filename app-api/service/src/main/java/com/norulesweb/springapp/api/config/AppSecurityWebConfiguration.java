@@ -6,6 +6,7 @@ import com.norulesweb.springapp.core.security.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,8 +30,10 @@ public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 	private AppUserDetailsService userDetailsService;
 
 	@Autowired
-	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+	public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		authenticationManagerBuilder
+				.userDetailsService(this.userDetailsService)
+				.passwordEncoder(passwordEncoder());
 	}
 
 	@Bean
@@ -46,22 +49,29 @@ public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
-				.exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler).and()
+				// we don't need CSRF because our token is invulnerable
+				.csrf().disable()
+
+				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 
 				// don't create session
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
-		httpSecurity.authorizeRequests()
-				.antMatchers("/app-api/user/login").permitAll()
-				.antMatchers("app-api/user/registration").hasRole("ADMIN")
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
-				// By default any request must be authenticated
-				.anyRequest()
-				.authenticated()
+				.authorizeRequests()
+				//.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-				// Allow HTTP Basic Auth
-				.and().httpBasic().disable();
-
-		httpSecurity.csrf().disable();
+				// allow anonymous resource requests
+				.antMatchers(
+						HttpMethod.GET,
+						"/",
+						"/*.html",
+						"/favicon.ico",
+						"/**/*.html",
+						"/**/*.css",
+						"/**/*.js"
+				).permitAll()
+				.antMatchers("/auth/**").permitAll()
+				.anyRequest().authenticated();
 
 		// Custom JWT based security filter
 		httpSecurity
@@ -69,8 +79,6 @@ public class AppSecurityWebConfiguration extends WebSecurityConfigurerAdapter {
 
 		// disable page caching
 		httpSecurity.headers().cacheControl();
-
-
 	}
 
 

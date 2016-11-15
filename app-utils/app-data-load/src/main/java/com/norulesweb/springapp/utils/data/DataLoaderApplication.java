@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
  * This sets up the database tables for the simulator
  */
 @Configuration
-@ComponentScan(basePackageClasses = {Initializer.class})
 public class DataLoaderApplication extends CommandLineUtilityConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(DataLoaderApplication.class);
@@ -40,5 +39,6 @@ public class DataLoaderApplication extends CommandLineUtilityConfiguration {
 			System.exit(0);
 		};
 	}
+
 
 }

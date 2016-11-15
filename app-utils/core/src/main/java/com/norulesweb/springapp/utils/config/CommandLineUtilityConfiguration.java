@@ -2,7 +2,6 @@ package com.norulesweb.springapp.utils.config;
 
 import com.norulesweb.springapp.core.common.AppRepositoryFactoryBean;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +20,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		@PropertySource(value = "file:spring-data-application.runtime.properties", ignoreResourceNotFound = true)
 })
 @EnableAutoConfiguration(exclude={
-		JmsAutoConfiguration.class
+		// JmsAutoConfiguration.class
 })
 /* Define the packages to scan */
 @ComponentScan(basePackages = {
-		"com.norulesweb.springapp.utils",
-		"com.norulesweb.springapp.core"
+		"com.norulesweb.springapp.core",
+		"com.norulesweb.springapp.utils"
 })
 /* Set up JPA repositories */
 @EnableTransactionManagement

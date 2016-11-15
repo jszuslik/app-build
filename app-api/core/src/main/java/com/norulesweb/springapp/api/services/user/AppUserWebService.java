@@ -10,17 +10,20 @@ import com.norulesweb.springapp.core.services.user.UserService;
 import com.norulesweb.springapp.core.services.utilities.UserLookup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,23 +64,20 @@ public class AppUserWebService {
 
 	public static final String URL_USER_REGISTRATION = URL_USER_BASE + "/registration";
 
-	@RequestMapping(value = URL_USER_LOGIN)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AppAuthenticationRequest authenticationRequest, Device device, HttpServletResponse response) throws AuthenticationException {
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+	@RequestMapping(value = URL_USER_LOGIN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> createAuthenticationToken(AppAuthenticationRequest authenticationRequest, Device device, HttpServletResponse response) throws AuthenticationException {
 		// Perform the security
-//		final Authentication authentication = authenticationManager.authenticate(
-//				new UsernamePasswordAuthenticationToken(
-//						authenticationRequest.getUsername(),
-//						passwordEncoder.encode(authenticationRequest.getPassword())
-//				)
-//		);
-		// SecurityContextHolder.getContext().setAuthentication(authentication);
+		final Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+					authenticationRequest.getUsername(),
+					authenticationRequest.getPassword()
+				)
+		);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// Reload password post-security so we can generate token
 		final AppUserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = appTokenUtil.generateToken(userDetails, device);
-		response.addHeader(AUTH_HEADER_NAME, token);
 
 		// Return the token
 		return ResponseEntity.ok(new AppAuthenticationResponse(token));
